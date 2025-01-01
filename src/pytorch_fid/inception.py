@@ -73,7 +73,9 @@ class InceptionV3(nn.Module):
         self.output_blocks = sorted(output_blocks)
         self.last_needed_block = max(output_blocks)
 
-        assert self.last_needed_block <= 3, "Last possible output block index is 3"
+        assert (
+            self.last_needed_block <= 3
+        ), "Last possible output block index is 3"
 
         self.blocks = nn.ModuleList()
 
@@ -145,7 +147,9 @@ class InceptionV3(nn.Module):
         x = inp
 
         if self.resize_input:
-            x = F.interpolate(x, size=(299, 299), mode="bilinear", align_corners=False)
+            x = F.interpolate(
+                x, size=(299, 299), mode="bilinear", align_corners=False
+            )
 
         if self.normalize_input:
             x = 2 * x - 1  # Scale from range (0, 1) to range (-1, 1)

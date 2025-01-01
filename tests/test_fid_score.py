@@ -2,7 +2,6 @@ import numpy as np
 import pytest
 import torch
 from PIL import Image
-
 from pytorch_fid import fid_score, inception
 
 
@@ -25,7 +24,8 @@ def test_calculate_fid_given_statistics(mocker, tmp_path, device):
             raise ValueError
 
     mocker.patch(
-        "pytorch_fid.fid_score.compute_statistics_of_path", side_effect=dummy_statistics
+        "pytorch_fid.fid_score.compute_statistics_of_path",
+        side_effect=dummy_statistics,
     )
 
     dir_names = ["1", "2"]

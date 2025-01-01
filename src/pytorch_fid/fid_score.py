@@ -39,7 +39,9 @@ from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 import numpy as np
 import torch
 import torchvision.transforms as TF
-from PIL import Image
+from PIL import Image, ImageFile
+
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 from scipy import linalg
 from torch.nn.functional import adaptive_avg_pool2d
 
@@ -54,16 +56,22 @@ except ImportError:
 from pytorch_fid.inception import InceptionV3
 
 parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
-parser.add_argument("--batch-size", type=int, default=50, help="Batch size to use")
+parser.add_argument(
+    "--batch-size", type=int, default=50, help="Batch size to use"
+)
 parser.add_argument(
     "--num-workers",
     type=int,
     help=(
-        "Number of processes to use for data loading. " "Defaults to `min(8, num_cpus)`"
+        "Number of processes to use for data loading. "
+        "Defaults to `min(8, num_cpus)`"
     ),
 )
 parser.add_argument(
-    "--device", type=str, default=None, help="Device to use. Like cuda, cuda:0 or cpu"
+    "--device",
+    type=str,
+    default=None,
+    help="Device to use. Like cuda, cuda:0 or cpu",
 )
 parser.add_argument(
     "--dims",
@@ -91,7 +99,17 @@ parser.add_argument(
     help=("Paths to the generated images or " "to .npz statistic files"),
 )
 
-IMAGE_EXTENSIONS = {"bmp", "jpg", "jpeg", "pgm", "png", "ppm", "tif", "tiff", "webp"}
+IMAGE_EXTENSIONS = {
+    "bmp",
+    "jpg",
+    "jpeg",
+    "pgm",
+    "png",
+    "ppm",
+    "tif",
+    "tiff",
+    "webp",
+}
 
 
 class ImagePathDataset(torch.utils.data.Dataset):
@@ -262,14 +280,20 @@ def calculate_activation_statistics(
     return mu, sigma
 
 
-def compute_statistics_of_path(path, model, batch_size, dims, device, num_workers=1):
+def compute_statistics_of_path(
+    path, model, batch_size, dims, device, num_workers=1
+):
     if path.endswith(".npz"):
         with np.load(path) as f:
             m, s = f["mu"][:], f["sigma"][:]
     else:
         path = pathlib.Path(path)
         files = sorted(
-            [file for ext in IMAGE_EXTENSIONS for file in path.rglob("*.{}".format(ext))]
+            [
+                file
+                for ext in IMAGE_EXTENSIONS
+                for file in path.rglob("*.{}".format(ext))
+            ]
         )
         m, s = calculate_activation_statistics(
             files, model, batch_size, dims, device, num_workers
@@ -342,7 +366,9 @@ def main():
         num_workers = args.num_workers
 
     if args.save_stats:
-        save_fid_stats(args.path, args.batch_size, device, args.dims, num_workers)
+        save_fid_stats(
+            args.path, args.batch_size, device, args.dims, num_workers
+        )
         return
 
     fid_value = calculate_fid_given_paths(

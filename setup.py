@@ -25,7 +25,8 @@ if __name__ == "__main__":
         version=get_version(os.path.join("src", "pytorch_fid", "__init__.py")),
         author="Max Seitzer",
         description=(
-            "Package for calculating Frechet Inception Distance (FID)" " using PyTorch"
+            "Package for calculating Frechet Inception Distance (FID)"
+            " using PyTorch"
         ),
         long_description=read("README.md"),
         long_description_content_type="text/markdown",
@@ -50,6 +51,12 @@ if __name__ == "__main__":
             "torchvision>=0.2.2",
         ],
         extras_require={
-            "dev": ["flake8", "flake8-bugbear", "flake8-isort", "black==24.3.0", "nox"]
+            "dev": [
+                "flake8",
+                "flake8-bugbear",
+                "flake8-isort",
+                "black==24.3.0",
+                "nox",
+            ]
         },
     )
