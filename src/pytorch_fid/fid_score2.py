@@ -51,7 +51,7 @@ except ImportError:
         return x
 
 
-from inception import InceptionV3
+from pytorch_fid.inception import InceptionV3
 
 parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
 parser.add_argument(
